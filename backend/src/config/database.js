@@ -2,6 +2,9 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
+const useDbSsl = process.env.DB_SSL === 'true';
+const rejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false';
+
 // Create connection pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -9,6 +12,11 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  ssl: useDbSsl
+    ? {
+        rejectUnauthorized,
+      }
+    : undefined,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

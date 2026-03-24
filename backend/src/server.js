@@ -20,9 +20,9 @@ const startServer = async () => {
     await initializeDatabase();
     console.log('✓ Database initialized');
 
-    // Start listening
+    // Start listening   console.log(`✓ Server running on http://localhost:${PORT}`); for dev perpose on vs code
     app.listen(PORT, () => {
-      console.log(`✓ Server running on http://localhost:${PORT}`);
+      console.log(`✓ Server running on ${PORT}`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`✓ API Documentation:`);
       console.log(`  - GET    http://localhost:${PORT}/health - Health check`);
