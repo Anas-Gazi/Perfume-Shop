@@ -1,0 +1,39 @@
+/* Global styles*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply box-border;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-luxury-cream font-sans text-luxury-dark;
+}
+
+/* Custom components */
+@layer components {
+  .btn-luxury {
+    @apply rounded-lg bg-luxury-dark px-6 py-3 font-semibold text-white transition-all hover:bg-luxury-gold hover:text-luxury-dark focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:ring-offset-2;
+  }
+
+  .btn-luxury-outline {
+    @apply rounded-lg border-2 border-luxury-dark px-6 py-3 font-semibold text-luxury-dark transition-all hover:bg-luxury-dark hover:text-luxury-cream;
+  }
+
+  .card {
+    @apply rounded-lg bg-white p-6 shadow-md transition-all hover:shadow-lg;
+  }
+
+  .section-title {
+    @apply text-4xl font-bold text-luxury-dark;
+  }
+
+  .subsection-title {
+    @apply text-2xl font-semibold text-luxury-dark;
+  }
+}
