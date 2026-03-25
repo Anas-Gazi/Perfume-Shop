@@ -31,6 +31,7 @@ export default function RegisterPage() {
         name: data.name,
         email: data.email,
         password: data.password,
+        gender: data.gender,
       });
 
       const { user, token } = response.data.data;
@@ -102,6 +103,28 @@ export default function RegisterPage() {
             {errors.password && (
               <span className="text-sm text-red-500">{errors.password.message}</span>
             )}
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label htmlFor="gender" className="mb-2 block font-semibold text-luxury-dark">
+              Gender
+            </label>
+            <select
+              id="gender"
+              {...register('gender')}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-luxury-gold focus:outline-none"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select gender
+              </option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="non-binary">Non-binary</option>
+              <option value="prefer_not_to_say">Prefer not to say</option>
+            </select>
+            {errors.gender && <span className="text-sm text-red-500">{errors.gender.message}</span>}
           </div>
 
           {/* Confirm Password */}

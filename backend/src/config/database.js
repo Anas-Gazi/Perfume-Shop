@@ -97,12 +97,22 @@ const initializeDatabase = async () => {
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
+        gender VARCHAR(20) DEFAULT NULL,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Keep old databases compatible by adding missing columns.
+    try {
+      await connection.query('ALTER TABLE users ADD COLUMN gender VARCHAR(20) DEFAULT NULL AFTER email');
+    } catch (error) {
+      if (error.code !== 'ER_DUP_FIELDNAME') {
+        throw error;
+      }
+    }
 
     // Products table
     await connection.query(`

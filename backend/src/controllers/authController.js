@@ -6,7 +6,7 @@ const { validate, registerSchema, loginSchema } = require('../utils/validation')
 // User registration
 const register = async (req, res, next) => {
   try {
-    const { name, email, password } = validate(registerSchema, req.body);
+    const { name, email, password, gender } = validate(registerSchema, req.body);
 
     // Check if user exists
     const userExists = await query('SELECT * FROM users WHERE email = $1', [email]);
@@ -22,8 +22,8 @@ const register = async (req, res, next) => {
 
     // Create user
     const result = await query(
-      'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role',
-      [name, email, hashedPassword, 'user']
+      'INSERT INTO users (name, email, password, gender, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, gender, role',
+      [name, email, hashedPassword, gender || null, 'user']
     );
 
     const user = result.rows[0];
@@ -37,6 +37,7 @@ const register = async (req, res, next) => {
           id: user.id,
           name: user.name,
           email: user.email,
+          gender: user.gender,
           role: user.role,
         },
         token,
@@ -82,6 +83,7 @@ const login = async (req, res, next) => {
           id: user.id,
           name: user.name,
           email: user.email,
+          gender: user.gender,
           role: user.role,
         },
         token,
@@ -96,7 +98,7 @@ const login = async (req, res, next) => {
 const getCurrentUser = async (req, res, next) => {
   try {
     const result = await query(
-      'SELECT id, name, email, role, created_at FROM users WHERE id = $1',
+      'SELECT id, name, email, gender, role, created_at FROM users WHERE id = $1',
       [req.user.userId]
     );
 

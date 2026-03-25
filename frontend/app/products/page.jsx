@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const { filters } = useProductStore();
 
   useEffect(() => {
@@ -45,9 +46,17 @@ export default function ProductsPage() {
         <p className="text-xl text-gray-600">Discover our exquisite range of luxury fragrances</p>
       </div>
 
+      <button
+        type="button"
+        onClick={() => setShowFilters((prev) => !prev)}
+        className="mb-6 inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-luxury-dark hover:bg-gray-50 md:hidden"
+      >
+        {showFilters ? 'Hide Filters' : 'Show Filters'}
+      </button>
+
       <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
         {/* Filters */}
-        <div className="md:col-span-1">
+        <div className={`${showFilters ? 'block' : 'hidden'} md:col-span-1 md:block`}>
           <ProductFilters />
         </div>
 
@@ -58,7 +67,7 @@ export default function ProductsPage() {
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-luxury-gold border-t-luxury-dark"></div>
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

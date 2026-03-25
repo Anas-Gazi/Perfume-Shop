@@ -35,10 +35,10 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-luxury-dark to-luxury-rose px-4 py-24 text-white md:px-8">
+      <section className="relative bg-gradient-to-r from-luxury-dark to-luxury-rose px-4 py-16 text-white sm:py-20 md:px-8 md:py-24">
         <div className="mx-auto max-w-6xl text-center">
-          <h1 className="mb-6 text-5xl font-bold">Luxurious Fragrances</h1>
-          <p className="mb-8 text-xl">Discover the essence of elegance and sophistication</p>
+          <h1 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">Luxurious Fragrances</h1>
+          <p className="mb-8 text-base text-white/90 sm:text-lg md:text-xl">Discover the essence of elegance and sophistication</p>
           <Link href="/products" className="btn-luxury inline-block">
             Explore Collections
           </Link>
@@ -46,7 +46,7 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:py-16 md:px-8">
         <h2 className="section-title mb-12 text-center">Featured Perfumes</h2>
 
         {loading ? (
@@ -54,7 +54,7 @@ export default function Home() {
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-luxury-gold border-t-luxury-dark"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {products.slice(0, 6).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -69,10 +69,10 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-14 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <h2 className="section-title mb-12 text-center">Why Choose Us</h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
             {[
               {
                 title: 'Premium Quality',

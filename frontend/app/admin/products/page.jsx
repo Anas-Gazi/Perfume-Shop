@@ -64,7 +64,7 @@ export default function AdminProducts() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 md:px-8">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="section-title">Manage Products</h1>
         <Link href="/admin/products/create" className="btn-luxury">
           + Add Product
@@ -72,7 +72,7 @@ export default function AdminProducts() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="min-w-[720px] w-full">
           <thead>
             <tr className="border-b-2 border-gray-300">
               <th className="px-4 py-3 text-left">Image</th>
@@ -101,7 +101,7 @@ export default function AdminProducts() {
                     <div className="h-12 w-12 rounded bg-gray-200" />
                   )}
                 </td>
-                <td className="px-4 py-3 font-semibold">{product.name}</td>
+                <td className="px-4 py-3 font-semibold whitespace-nowrap">{product.name}</td>
                 <td className="px-4 py-3">{product.category}</td>
                 <td className="px-4 py-3">${product.price}</td>
                 <td className="px-4 py-3">

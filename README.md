@@ -114,8 +114,7 @@ Expected:
 - database initialization success
 
 ### Terminal B: Frontend
-
-```bash
+``bash
 cd frontend
 npm install
 ```

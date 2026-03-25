@@ -40,10 +40,10 @@ export default function CartPage() {
         <div className="lg:col-span-2">
           <div className="space-y-4">
             {items.map((item) => (
-              <div key={item.productId} className="card flex gap-4">
+              <div key={item.productId} className="card flex flex-col gap-4 sm:flex-row">
                 {/* Image */}
                 {item.images && item.images.length > 0 ? (
-                  <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded">
+                  <div className="relative h-28 w-full flex-shrink-0 overflow-hidden rounded sm:h-32 sm:w-32">
                     <Image
                       src={item.images[0]}
                       alt={item.name}
@@ -53,7 +53,7 @@ export default function CartPage() {
                     />
                   </div>
                 ) : (
-                  <div className="h-32 w-32 flex-shrink-0 rounded bg-gray-200" />
+                  <div className="h-28 w-full flex-shrink-0 rounded bg-gray-200 sm:h-32 sm:w-32" />
                 )}
 
                 {/* Details */}
@@ -63,13 +63,13 @@ export default function CartPage() {
                     <p className="text-luxury-gold">${item.price}</p>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3 sm:mt-0 sm:gap-4">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() =>
                           updateQuantity(item.productId, item.quantity - 1)
                         }
-                        className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300"
+                        className="min-h-9 min-w-9 rounded bg-gray-200 px-3 py-1 hover:bg-gray-300"
                       >
                         −
                       </button>
@@ -78,7 +78,7 @@ export default function CartPage() {
                         onClick={() =>
                           updateQuantity(item.productId, item.quantity + 1)
                         }
-                        className="rounded bg-gray-200 px-3 py-1 hover:bg-gray-300"
+                        className="min-h-9 min-w-9 rounded bg-gray-200 px-3 py-1 hover:bg-gray-300"
                       >
                         +
                       </button>
@@ -93,7 +93,7 @@ export default function CartPage() {
                 </div>
 
                 {/* Subtotal */}
-                <div className="flex flex-col items-end justify-center">
+                <div className="flex flex-col items-start justify-center sm:items-end">
                   <p className="text-lg font-bold text-luxury-dark">
                     ${(item.price * item.quantity).toFixed(2)}
                   </p>

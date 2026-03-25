@@ -67,7 +67,7 @@ export default function ProductDetailsPage({ params }) {
         {/* Images */}
         <div>
           {product.images && product.images.length > 0 ? (
-            <div className="relative h-96 w-full overflow-hidden rounded-lg bg-white shadow-md md:h-[500px]">
+            <div className="relative h-72 w-full overflow-hidden rounded-lg bg-white shadow-md sm:h-96 md:h-[500px]">
               <Image
                 src={product.images[0]}
                 alt={product.name}
@@ -77,14 +77,14 @@ export default function ProductDetailsPage({ params }) {
               />
             </div>
           ) : (
-            <div className="flex h-96 items-center justify-center rounded-lg bg-gray-200 md:h-[500px]">
+            <div className="flex h-72 items-center justify-center rounded-lg bg-gray-200 sm:h-96 md:h-[500px]">
               <span className="text-gray-500">No image available</span>
             </div>
           )}
           {product.images && product.images.length > 1 && (
-            <div className="mt-4 flex gap-4">
+            <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
               {product.images.map((img, index) => (
-                <div key={index} className="relative h-24 w-24 overflow-hidden rounded">
+                <div key={index} className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded sm:h-24 sm:w-24">
                   <Image
                     src={img}
                     alt={`${product.name}-${index}`}
@@ -102,8 +102,8 @@ export default function ProductDetailsPage({ params }) {
         <div>
           <h1 className="section-title mb-4">{product.name}</h1>
 
-          <div className="mb-6 flex items-center gap-4">
-            <span className="text-4xl font-bold text-luxury-gold">${product.price}</span>
+          <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <span className="text-3xl font-bold text-luxury-gold sm:text-4xl">${product.price}</span>
             <span
               className={`rounded-full px-4 py-2 font-semibold ${
                 product.stock > 0
@@ -122,7 +122,7 @@ export default function ProductDetailsPage({ params }) {
             </div>
           )}
 
-          <div className="mb-6 grid grid-cols-2 gap-4">
+          <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {product.category && (
               <div>
                 <h4 className="font-semibold text-luxury-dark">Category</h4>
@@ -138,7 +138,7 @@ export default function ProductDetailsPage({ params }) {
           </div>
 
           {/* Quantity Selector */}
-          <div className="mb-6 flex items-center gap-4">
+          <div className="mb-6 flex flex-wrap items-center gap-3 sm:gap-4">
             <label htmlFor="quantity" className="font-semibold">
               Quantity:
             </label>
@@ -149,7 +149,7 @@ export default function ProductDetailsPage({ params }) {
               max={product.stock}
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-20 rounded border border-gray-300 px-3 py-2"
+              className="min-h-11 w-24 rounded border border-gray-300 px-3 py-2"
             />
           </div>
 

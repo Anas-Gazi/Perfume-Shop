@@ -52,11 +52,12 @@ export default function AdminUsers() {
       <h1 className="section-title mb-8">All Users</h1>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="min-w-[700px] w-full">
           <thead>
             <tr className="border-b-2 border-gray-300">
               <th className="px-4 py-3 text-left">Name</th>
               <th className="px-4 py-3 text-left">Email</th>
+              <th className="px-4 py-3 text-left">Gender</th>
               <th className="px-4 py-3 text-left">Role</th>
               <th className="px-4 py-3 text-left">Joined</th>
             </tr>
@@ -67,8 +68,9 @@ export default function AdminUsers() {
                 key={u.id}
                 className="border-b border-gray-200 hover:bg-gray-50"
               >
-                <td className="px-4 py-3 font-semibold">{u.name}</td>
-                <td className="px-4 py-3">{u.email}</td>
+                <td className="px-4 py-3 font-semibold whitespace-nowrap">{u.name}</td>
+                <td className="px-4 py-3 whitespace-nowrap">{u.email}</td>
+                <td className="px-4 py-3 capitalize whitespace-nowrap">{u.gender || 'Unknown'}</td>
                 <td className="px-4 py-3">
                   <span
                     className={`rounded-full px-3 py-1 text-sm capitalize ${

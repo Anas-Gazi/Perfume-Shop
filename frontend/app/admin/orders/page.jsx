@@ -75,7 +75,7 @@ export default function AdminOrders() {
       <div className="space-y-4">
         {orders.map((order) => (
           <div key={order.id} className="card">
-            <div className="mb-4 flex items-start justify-between">
+            <div className="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row">
               <div>
                 <h3 className="subsection-title">Order #{order.id}</h3>
                 <p className="text-sm text-gray-600">
@@ -85,12 +85,12 @@ export default function AdminOrders() {
                   {formatDate(order.created_at)}
                 </p>
               </div>
-              <div className="text-right">
+              <div className="w-full text-left sm:w-auto sm:text-right">
                 <p className="text-2xl font-bold text-luxury-gold">${formatCurrency(order.total_price)}</p>
                 <select
                   value={order.status}
                   onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
-                  className="mt-2 rounded border border-gray-300 px-3 py-1 capitalize"
+                  className="mt-2 w-full rounded border border-gray-300 px-3 py-2 capitalize sm:w-auto"
                 >
                   {statuses.map((status) => (
                     <option key={status} value={status}>

@@ -15,6 +15,8 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const formatCurrency = (value) => Number(value || 0).toFixed(2);
+
   useEffect(() => {
     if (!hasInitialized) {
       return;
@@ -60,27 +62,27 @@ export default function AdminDashboard() {
         <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <div className="card">
             <p className="text-sm text-gray-600">Total Users</p>
-            <p className="text-4xl font-bold text-luxury-gold">{stats.totalUsers}</p>
+            <p className="text-3xl font-bold text-luxury-gold sm:text-4xl">{stats.totalUsers}</p>
           </div>
           <div className="card">
             <p className="text-sm text-gray-600">Total Orders</p>
-            <p className="text-4xl font-bold text-luxury-gold">{stats.totalOrders}</p>
+            <p className="text-3xl font-bold text-luxury-gold sm:text-4xl">{stats.totalOrders}</p>
           </div>
           <div className="card">
             <p className="text-sm text-gray-600">Total Revenue</p>
-            <p className="text-4xl font-bold text-luxury-gold">${stats.totalRevenue.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-luxury-gold sm:text-4xl">${formatCurrency(stats.totalRevenue)}</p>
           </div>
           <div className="card">
             <p className="text-sm text-gray-600">Average Order</p>
-            <p className="text-4xl font-bold text-luxury-gold">
-              ${(stats.totalRevenue / Math.max(stats.totalOrders, 1)).toFixed(2)}
+            <p className="text-3xl font-bold text-luxury-gold sm:text-4xl">
+              ${formatCurrency(Number(stats.totalRevenue || 0) / Math.max(Number(stats.totalOrders || 0), 1))}
             </p>
           </div>
         </div>
       )}
 
       {/* Management Sections */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Link href="/admin/products" className="card hover:shadow-lg">
           <div className="mb-4 text-4xl">📦</div>
           <h3 className="subsection-title mb-2">Products</h3>
@@ -100,6 +102,13 @@ export default function AdminDashboard() {
           <h3 className="subsection-title mb-2">Users</h3>
           <p className="mb-4 text-gray-600">View all registered users</p>
           <span className="text-luxury-gold font-semibold">Manage →</span>
+        </Link>
+
+        <Link href="/admin/analytics" className="card hover:shadow-lg">
+          <div className="mb-4 text-4xl">📈</div>
+          <h3 className="subsection-title mb-2">Analytics</h3>
+          <p className="mb-4 text-gray-600">Track sales, stock, trends, and customer behavior</p>
+          <span className="text-luxury-gold font-semibold">View Insights →</span>
         </Link>
       </div>
     </div>
