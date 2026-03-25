@@ -118,7 +118,7 @@ mysql -u root -p
 npm run dev
 
 # Should output:
-# ✓ Server running on http://localhost:5000
+# ✓ Server running on https://perfume-backend-rgvf.onrender.com
 # ✓ Database tables initialized successfully
 ```
 
@@ -133,7 +133,7 @@ cd frontend
 npm install
 
 # Create .env.local file
-echo "NEXT_PUBLIC_API_URL=http://localhost:5000" > .env.local
+echo "NEXT_PUBLIC_API_URL=https://perfume-backend-rgvf.onrender.com" > .env.local
 ```
 
 ### 5. Start Frontend Server
@@ -245,7 +245,7 @@ Update DB_HOST, DB_USER, DB_PASSWORD in production .env
 - [ ] Frontend .env.local created
 - [ ] Both servers running on correct ports
 - [ ] Can access http://localhost:3000 (frontend)
-- [ ] Can access http://localhost:5000/health (backend)
+- [ ] Can access https://perfume-backend-rgvf.onrender.com/health (backend)
 
 ## 🐛 Troubleshooting
 
