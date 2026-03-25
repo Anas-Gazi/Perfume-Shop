@@ -14,6 +14,14 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const formatCurrency = (value) => Number(value || 0).toFixed(2);
+
+  const formatDate = (value) => {
+    if (!value) return 'N/A';
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString();
+  };
+
   useEffect(() => {
     if (!hasInitialized) {
       return;
@@ -30,7 +38,7 @@ export default function AdminOrders() {
   const fetchOrders = async () => {
     try {
       const response = await api.get('/orders');
-      setOrders(response.data.data);
+      setOrders(Array.isArray(response.data?.data) ? response.data.data : []);
     } catch (error) {
       toast.error('Failed to load orders');
       console.error('Error:', error);
@@ -74,11 +82,11 @@ export default function AdminOrders() {
                   {order.user_name} ({order.user_email})
                 </p>
                 <p className="text-sm text-gray-600">
-                  {new Date(order.created_at).toLocaleDateString()}
+                  {formatDate(order.created_at)}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-luxury-gold">${order.total_price.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-luxury-gold">${formatCurrency(order.total_price)}</p>
                 <select
                   value={order.status}
                   onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
@@ -96,9 +104,9 @@ export default function AdminOrders() {
             <div className="border-t border-gray-200 pt-4">
               <h4 className="font-semibold mb-2">Items:</h4>
               <ul className="space-y-1 text-sm">
-                {order.items.map((item) => (
+                {(order.items || []).map((item) => (
                   <li key={item.id}>
-                    {item.name} x{item.quantity} - ${item.price.toFixed(2)}
+                    {item.name} x{item.quantity} - ${formatCurrency(item.price)}
                   </li>
                 ))}
               </ul>

@@ -1,7 +1,7 @@
 // Checkout page
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -18,6 +18,12 @@ export default function CheckoutPage() {
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
   const user = useAuthStore((state) => state.user);
+  const hasInitialized = useAuthStore((state) => state.hasInitialized);
+  const initialize = useAuthStore((state) => state.initialize);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   const {
     register,
@@ -30,6 +36,14 @@ export default function CheckoutPage() {
   const total = useMemo(() => {
     return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }, [items]);
+
+  if (!hasInitialized) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-luxury-gold border-t-luxury-dark"></div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (

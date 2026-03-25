@@ -3,18 +3,25 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 
-export default function OrderPage({ params }) {
+export default function OrderPage() {
+  const params = useParams();
+  const orderId = params?.id;
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const formatCurrency = (value) => Number(value || 0).toFixed(2);
+
   useEffect(() => {
+    if (!orderId) return;
+
     const fetchOrder = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/orders/${params.id}`);
+        const response = await api.get(`/orders/${orderId}`);
         setOrder(response.data.data);
       } catch (error) {
         toast.error('Failed to load order');
@@ -25,7 +32,7 @@ export default function OrderPage({ params }) {
     };
 
     fetchOrder();
-  }, [params.id]);
+  }, [orderId]);
 
   if (loading) {
     return (
@@ -67,11 +74,11 @@ export default function OrderPage({ params }) {
           <div className="border-y border-gray-300 py-4">
             <h3 className="subsection-title mb-4">Items</h3>
             <div className="space-y-2">
-              {order.items.map((item) => (
-                <div key={item.id} className="flex justify-between">
+              {(order.items || []).map((item, index) => (
+                <div key={`${item.id || item.product_id || 'item'}-${index}`} className="flex justify-between">
                   <span>{item.name}</span>
                   <span>
-                    {item.quantity}x ${item.price.toFixed(2)}
+                    {item.quantity}x ${formatCurrency(item.price)}
                   </span>
                 </div>
               ))}
@@ -81,7 +88,7 @@ export default function OrderPage({ params }) {
           <div className="mt-4">
             <div className="flex justify-between text-xl font-bold">
               <span>Total:</span>
-              <span className="text-luxury-gold">${order.total_price.toFixed(2)}</span>
+              <span className="text-luxury-gold">${formatCurrency(order.total_price)}</span>
             </div>
           </div>
 
