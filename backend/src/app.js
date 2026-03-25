@@ -11,7 +11,6 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const userRoutes = require('./routes/users');
-const analyticsRoutes = require('./routes/analytics');
 
 // Import middleware
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -28,27 +27,10 @@ app.use(helmet());
 app.use(compression());
 
 // CORS configuration
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       // Allow server-to-server calls and tools that may not send Origin.
-//       if (!origin) {
-//         return callback(null, true);
-//       }
-
-//       if (allowedOrigins.includes(origin)) {
-//         return callback(null, true);
-//       }
-
-//       return callback(new Error('Not allowed by CORS'));
-//     },
-//     credentials: true,
-//   })
-// );
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // allow server-to-server calls
+      if (!origin) return callback(null, true);
       const originWithoutSlash = origin.replace(/\/$/, '');
       if (allowedOrigins.includes(originWithoutSlash)) {
         return callback(null, true);
@@ -84,7 +66,7 @@ app.get('/api', (req, res) => {
       products: '/api/products',
       orders: '/api/orders',
       users: '/api/users',
-      analytics: '/api/analytics',
+      // analytics: '/api/analytics',   // removed for now
     },
   });
 });
@@ -94,7 +76,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/analytics', analyticsRoutes);
+// app.use('/api/analytics', analyticsRoutes);   // ← Commented out
 
 // 404 handler
 app.use(notFoundHandler);
