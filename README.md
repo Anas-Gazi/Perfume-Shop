@@ -123,6 +123,10 @@ Create frontend env file:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_FACEBOOK_URL=https://facebook.com/your-page
+NEXT_PUBLIC_INSTAGRAM_URL=https://instagram.com/your-page
+NEXT_PUBLIC_WHATSAPP_NUMBER=15551234567
+NEXT_PUBLIC_WHATSAPP_TEXT=Hi, I need help with my order.
 ```
 
 Start frontend:

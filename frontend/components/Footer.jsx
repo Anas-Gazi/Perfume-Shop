@@ -26,9 +26,9 @@ export default function Footer() {
           <div>
             <h4 className="mb-4 font-semibold">Support</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-luxury-gold">Help Center</a></li>
-              <li><a href="#" className="hover:text-luxury-gold">Contact Us</a></li>
-              <li><a href="#" className="hover:text-luxury-gold">Returns</a></li>
+              <li><a href="/help-center" className="hover:text-luxury-gold">Help Center</a></li>
+              <li><a href="/contact-us" className="hover:text-luxury-gold">Contact Us</a></li>
+              <li><a href="/returns" className="hover:text-luxury-gold">Returns</a></li>
             </ul>
           </div>
 
@@ -36,9 +36,9 @@ export default function Footer() {
           <div>
             <h4 className="mb-4 font-semibold">Legal</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-luxury-gold">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-luxury-gold">Terms & Conditions</a></li>
-              <li><a href="#" className="hover:text-luxury-gold">Shipping</a></li>
+              <li><a href="/privacy-policy" className="hover:text-luxury-gold">Privacy Policy</a></li>
+              <li><a href="/terms-and-conditions" className="hover:text-luxury-gold">Terms & Conditions</a></li>
+              <li><a href="/shipping" className="hover:text-luxury-gold">Shipping</a></li>
             </ul>
           </div>
         </div>

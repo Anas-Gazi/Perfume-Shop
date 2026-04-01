@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const userRoutes = require('./routes/users');
+const analyticsRoutes = require('./routes/analytics');
 
 // Import middleware
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -85,7 +86,7 @@ app.get('/api', (req, res) => {
       products: '/api/products',
       orders: '/api/orders',
       users: '/api/users',
-      //analytics: '/api/analytics',   // removed for now
+      analytics: '/api/analytics',
     },
   });
 });
@@ -95,7 +96,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
-//app.use('/api/analytics', analyticsRoutes);   // ← Commented out
+app.use('/api/analytics', analyticsRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
