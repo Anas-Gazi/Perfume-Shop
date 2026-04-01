@@ -17,10 +17,30 @@ const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
+const normalizeOrigin = (origin = '') => origin.trim().replace(/\/$/, '');
+
 const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
+
+const isOriginAllowed = (origin) => {
+  const normalizedOrigin = normalizeOrigin(origin);
+
+  return allowedOrigins.some((allowedOrigin) => {
+    // Support wildcard hosts like https://*.vercel.app
+    if (allowedOrigin.includes('*')) {
+      const wildcardPattern = new RegExp(
+        `^${allowedOrigin
+          .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+          .replace(/\*/g, '.*')}$`
+      );
+      return wildcardPattern.test(normalizedOrigin);
+    }
+
+    return allowedOrigin === normalizedOrigin;
+  });
+};
 
 // Security middleware
 app.use(helmet());
@@ -31,8 +51,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      const originWithoutSlash = origin.replace(/\/$/, '');
-      if (allowedOrigins.includes(originWithoutSlash)) {
+      if (isOriginAllowed(origin)) {
         return callback(null, true);
       }
       console.log(`Blocked by CORS: ${origin}`);
@@ -66,7 +85,7 @@ app.get('/api', (req, res) => {
       products: '/api/products',
       orders: '/api/orders',
       users: '/api/users',
-      // analytics: '/api/analytics',   // removed for now
+      //analytics: '/api/analytics',   // removed for now
     },
   });
 });
@@ -76,7 +95,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
-// app.use('/api/analytics', analyticsRoutes);   // ← Commented out
+//app.use('/api/analytics', analyticsRoutes);   // ← Commented out
 
 // 404 handler
 app.use(notFoundHandler);
