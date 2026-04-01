@@ -1,7 +1,7 @@
 // Admin product create/edit page
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
@@ -26,22 +26,7 @@ export default function AdminProductForm() {
 
   const isEdit = params?.id && params.id !== 'create';
 
-  useEffect(() => {
-    if (!hasInitialized) {
-      return;
-    }
-
-    if (user?.role !== 'admin') {
-      router.push('/');
-      return;
-    }
-
-    if (isEdit) {
-      fetchProduct();
-    }
-  }, [user, router, isEdit, params?.id, hasInitialized]);
-
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       const response = await api.get(`/products/${params.id}`);
       const product = response.data.data;
@@ -58,7 +43,22 @@ export default function AdminProductForm() {
       toast.error('Failed to load product');
       console.error('Error:', error);
     }
-  };
+  }, [params?.id]);
+
+  useEffect(() => {
+    if (!hasInitialized) {
+      return;
+    }
+
+    if (user?.role !== 'admin') {
+      router.push('/');
+      return;
+    }
+
+    if (isEdit) {
+      fetchProduct();
+    }
+  }, [user, router, isEdit, hasInitialized, fetchProduct]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

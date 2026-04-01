@@ -95,7 +95,7 @@ export default function OrderPage() {
           <div className="mt-4 rounded bg-blue-50 p-4">
             <p className="font-semibold text-blue-800">Status: {order.status.toUpperCase()}</p>
             <p className="text-sm text-blue-600 mt-2">
-              We'll send you an email with tracking information once your order ships.
+              We&apos;ll send you an email with tracking information once your order ships.
             </p>
           </div>
         </div>

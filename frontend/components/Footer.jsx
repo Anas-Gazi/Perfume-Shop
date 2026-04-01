@@ -8,7 +8,7 @@ export default function Footer() {
           <div>
             <h3 className="mb-4 text-xl font-bold text-luxury-gold">Perfume</h3>
             <p className="text-sm text-gray-300">
-              Discover the world's most exquisite fragrances handpicked for luxury and elegance.
+              Discover the world&apos;s most exquisite fragrances handpicked for luxury and elegance.
             </p>
           </div>
 

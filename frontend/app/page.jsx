@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import api from '@/lib/api';
 import { useProductStore } from '@/lib/productStore';
 import ProductCard from '@/components/ProductCard';
@@ -30,7 +29,7 @@ export default function Home() {
     };
 
     fetchProducts();
-  }, []);
+  }, [storeProducts]);
 
   return (
     <div className="min-h-screen">
