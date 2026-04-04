@@ -17,7 +17,7 @@ const register = async (req, res, next) => {
       });
     }
 
-    // Hash password
+    // Password is hashed with bcrypt before persistence.
     const hashedPassword = await hashPassword(password);
 
     // Create user
@@ -27,6 +27,7 @@ const register = async (req, res, next) => {
     );
 
     const user = result.rows[0];
+    // Token includes role so authorization checks can run without extra DB lookups.
     const token = generateToken(user.id, user.role);
 
     res.status(201).json({
@@ -64,7 +65,7 @@ const login = async (req, res, next) => {
 
     const user = result.rows[0];
 
-    // Compare password
+    // Compare plaintext password with stored bcrypt hash.
     const isPasswordValid = await comparePassword(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({

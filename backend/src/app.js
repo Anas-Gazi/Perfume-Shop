@@ -18,6 +18,8 @@ const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
+// FRONTEND_URL can contain multiple origins separated by commas.
+// Example: "http://localhost:3000,https://my-shop.vercel.app".
 const normalizeOrigin = (origin = '') => origin.trim().replace(/\/$/, '');
 
 const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
@@ -51,6 +53,7 @@ app.use(compression());
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow non-browser clients (Postman, curl, server-to-server) with no Origin header.
       if (!origin) return callback(null, true);
       if (isOriginAllowed(origin)) {
         return callback(null, true);
@@ -92,6 +95,7 @@ app.get('/api', (req, res) => {
 });
 
 // API routes
+// Keep route registration above notFoundHandler so unmatched paths fall through correctly.
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);

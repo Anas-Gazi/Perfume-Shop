@@ -14,7 +14,9 @@ const authenticateToken = (req, res, next) => {
       });
     }
 
+    // verifyToken throws when token is invalid/expired; this is handled in catch block.
     const decoded = verifyToken(token);
+    // Attach identity to request so downstream handlers do not re-parse JWT.
     req.user = decoded;
     next();
   } catch (error) {

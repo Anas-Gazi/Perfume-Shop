@@ -1,5 +1,11 @@
 const { query } = require('../config/database');
 
+// This controller builds a single analytics response for the admin dashboard.
+// Design goals:
+// 1) Keep time-range logic in JS helpers for clarity and testability.
+// 2) Fetch aggregates in parallel to reduce API latency.
+// 3) Return frontend-ready structures (trend series, category stats, KPI bundle).
+
 const PERIODS = {
   weekly: { days: 7 },
   monthly: { days: 30 },

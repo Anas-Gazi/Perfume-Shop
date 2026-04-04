@@ -16,11 +16,11 @@ if (!fs.existsSync(uploadsDir)) {
 // Start server
 const startServer = async () => {
   try {
-    // Initialize database
+    // Ensure schema/index bootstrap finishes before accepting requests.
     await initializeDatabase();
     console.log('✓ Database initialized');
 
-    // Start listening   console.log(`✓ Server running on http://localhost:${PORT}`); for dev perpose on vs code
+    // Bind HTTP listener only after dependencies (DB + fs paths) are ready.
     app.listen(PORT, () => {
       console.log(`✓ Server running on ${PORT}`);
       console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);

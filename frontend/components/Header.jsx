@@ -35,6 +35,7 @@ export default function Header() {
   const initialize = useAuthStore((state) => state.initialize);
   const cartItems = useCartStore((state) => state.items);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // Desktop-only dropdown state for social icon reveal.
   const [socialMenuOpen, setSocialMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function Header() {
   }, [initialize]);
 
   useEffect(() => {
+    // Keep mobile drawer state consistent when auth state changes (login/logout).
     setMobileMenuOpen(false);
   }, [user]);
 
@@ -77,6 +79,7 @@ export default function Header() {
             {(socialLinks.facebook || socialLinks.instagram || socialLinks.whatsapp) && (
               <div
                 className="relative"
+                // Hover supports pointer users; click supports keyboard/touchpad interactions.
                 onMouseEnter={() => setSocialMenuOpen(true)}
                 onMouseLeave={() => setSocialMenuOpen(false)}
               >
@@ -204,6 +207,7 @@ export default function Header() {
             )}
 
             {(socialLinks.facebook || socialLinks.instagram || socialLinks.whatsapp) && (
+              // Mobile keeps icons directly visible to avoid nested dropdown complexity.
               <div className="flex items-center gap-2 border-t border-gray-200 pt-3">
                 {socialLinks.facebook && (
                   <a

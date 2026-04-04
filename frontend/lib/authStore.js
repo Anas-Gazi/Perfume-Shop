@@ -30,6 +30,7 @@ export const useAuthStore = create((set) => ({
   // Initialize from localStorage
   initialize: () => {
     if (typeof window !== 'undefined') {
+      // Rehydrate auth state on page refresh so protected UI does not flicker.
       const user = localStorage.getItem('user');
       const token = localStorage.getItem('token');
       if (user && token) {

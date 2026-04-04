@@ -9,7 +9,7 @@ const placeOrder = async (req, res, next) => {
     const { items, shippingAddress } = validate(placeOrderSchema, req.body);
     const userId = req.user.userId;
 
-    // Calculate total price and validate stock
+    // Pre-validate line items before writing any order records.
     let totalPrice = 0;
     const validatedItems = [];
 
@@ -36,7 +36,7 @@ const placeOrder = async (req, res, next) => {
       validatedItems.push({ ...item, product });
     }
 
-    // Create order
+    // Create order header first, then insert line items.
     const orderResult = await query(
       'INSERT INTO orders (user_id, total_price, shipping_address, status) VALUES ($1, $2, $3, $4) RETURNING *',
       [userId, totalPrice, shippingAddress, 'pending']
@@ -44,6 +44,8 @@ const placeOrder = async (req, res, next) => {
 
     const order = orderResult.rows[0];
 
+    // NOTE: This flow is not wrapped in a DB transaction.
+    // For high traffic, convert this block to a transaction to avoid partial writes.
     // Add order items and update stock
     for (const item of validatedItems) {
       await query(
@@ -51,7 +53,7 @@ const placeOrder = async (req, res, next) => {
         [order.id, item.productId, item.quantity, item.product.price]
       );
 
-      // Update product stock
+      // Decrement stock after creating each order item record.
       await query('UPDATE products SET stock = stock - $1 WHERE id = $2', [item.quantity, item.productId]);
     }
 

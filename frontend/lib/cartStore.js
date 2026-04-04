@@ -8,7 +8,7 @@ export const useCartStore = create(
       items: [],
       total: 0,
 
-      // Add product to cart
+      // Merge by productId (no duplicate lines for same product).
       addToCart: (product, quantity) =>
         set((state) => {
           const existingItem = state.items.find((item) => item.productId === product.id);
@@ -67,7 +67,7 @@ export const useCartStore = create(
           total: 0,
         }),
 
-      // Get cart summary
+      // Derived values helper for header badge + checkout summary UI.
       getCartSummary: () => {
         const state = get();
         return {
@@ -78,6 +78,7 @@ export const useCartStore = create(
       },
     }),
     {
+      // localStorage key used by Zustand persist middleware.
       name: 'cart-storage',
     }
   )
