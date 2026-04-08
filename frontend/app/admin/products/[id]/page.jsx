@@ -22,6 +22,10 @@ export default function AdminProductForm() {
     category: '',
     fragranceType: '',
     stock: '',
+    isBestSeller: false,
+    isNewArrival: false,
+    isOnSale: false,
+    isFanFavorite: false,
   });
 
   const isEdit = params?.id && params.id !== 'create';
@@ -37,6 +41,10 @@ export default function AdminProductForm() {
         category: product.category || '',
         fragranceType: product.fragrance_type || '',
         stock: product.stock,
+        isBestSeller: !!product.is_best_seller,
+        isNewArrival: !!product.is_new_arrival,
+        isOnSale: !!product.is_on_sale,
+        isFanFavorite: !!product.is_fan_favorite,
       });
       // Don't set images as they're already on Cloudinary
     } catch (error) {
@@ -61,10 +69,10 @@ export default function AdminProductForm() {
   }, [user, router, isEdit, hasInitialized, fetchProduct]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -85,6 +93,10 @@ export default function AdminProductForm() {
       data.append('category', formData.category);
       data.append('fragranceType', formData.fragranceType);
       data.append('stock', formData.stock);
+      data.append('isBestSeller', String(formData.isBestSeller));
+      data.append('isNewArrival', String(formData.isNewArrival));
+      data.append('isOnSale', String(formData.isOnSale));
+      data.append('isFanFavorite', String(formData.isFanFavorite));
 
       // Add images
       images.forEach((image) => {
@@ -212,6 +224,36 @@ export default function AdminProductForm() {
             className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-luxury-gold focus:outline-none"
             placeholder="0"
           />
+        </div>
+
+        {/* Homepage Placement */}
+        <div>
+          <p className="mb-3 block font-semibold">Homepage Placement</p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {[
+              { key: 'isBestSeller', label: 'Best Seller' },
+              { key: 'isNewArrival', label: 'New Arrival' },
+              { key: 'isOnSale', label: 'On Sale' },
+              { key: 'isFanFavorite', label: 'Fan Favorite' },
+            ].map((item) => (
+              <label
+                key={item.key}
+                className="flex cursor-pointer items-center justify-between rounded-lg border border-gray-300 px-4 py-3"
+              >
+                <span className="text-sm font-medium text-luxury-dark">{item.label}</span>
+                <input
+                  type="checkbox"
+                  name={item.key}
+                  checked={formData[item.key]}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 accent-luxury-gold"
+                />
+              </label>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-gray-500">
+            Turn on any label to control where this perfume appears on the homepage.
+          </p>
         </div>
 
         {/* Images */}

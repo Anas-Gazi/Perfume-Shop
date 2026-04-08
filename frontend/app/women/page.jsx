@@ -1,0 +1,76 @@
+// Women's perfumes page
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import api from '@/lib/api';
+import ProductCard from '@/components/ProductCard';
+import toast from 'react-hot-toast';
+
+export default function WomenPerfumesPage() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/products', {
+          params: { category: 'Women' },
+        });
+        setProducts(response.data.data || []);
+      } catch (error) {
+        toast.error("Failed to load women's perfumes");
+        console.error('Error loading women products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  return (
+    <div className="min-h-screen">
+      <section className="audience-hero audience-hero--split audience-hero-women px-4 py-14 text-white sm:py-16 md:px-8">
+        <div className="audience-hero__grid mx-auto max-w-7xl">
+          <div className="audience-hero__copy">
+            <p className="audience-hero__kicker">Elegant Collection</p>
+            <h1 className="hero-heading audience-hero__title">Women's Perfumes</h1>
+            <p className="audience-hero__desc">
+              Explore elegant floral, woody and modern compositions made for every mood.
+            </p>
+            <div className="audience-hero__actions mt-6 flex flex-wrap gap-3">
+              <Link href="/products" className="btn-luxury">All Perfumes</Link>
+              <Link href="/men" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Men's Perfumes</Link>
+              <Link href="/unisex" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Unisex Perfumes</Link>
+            </div>
+          </div>
+
+          <div className="audience-hero__visual audience-hero__visual-women">
+            <span className="audience-hero__badge">Modern For Her</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 md:px-8">
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-luxury-gold border-t-luxury-dark"></div>
+          </div>
+        ) : products.length > 0 ? (
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-luxury-gold/20 bg-white/80 px-6 py-14 text-center">
+            <p className="text-xl font-semibold text-luxury-dark">No women's perfumes available right now</p>
+            <p className="mt-2 text-gray-600">Add women's products from admin to populate this collection.</p>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

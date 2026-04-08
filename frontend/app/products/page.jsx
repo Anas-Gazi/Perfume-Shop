@@ -67,7 +67,7 @@ export default function ProductsPage() {
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-luxury-gold border-t-luxury-dark"></div>
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

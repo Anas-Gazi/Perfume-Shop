@@ -72,7 +72,7 @@ export default function AdminProducts() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-[720px] w-full">
+        <table className="min-w-[920px] w-full">
           <thead>
             <tr className="border-b-2 border-gray-300">
               <th className="px-4 py-3 text-left">Image</th>
@@ -80,6 +80,7 @@ export default function AdminProducts() {
               <th className="px-4 py-3 text-left">Category</th>
               <th className="px-4 py-3 text-left">Price</th>
               <th className="px-4 py-3 text-left">Stock</th>
+              <th className="px-4 py-3 text-left">Homepage Labels</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
           </thead>
@@ -114,6 +115,28 @@ export default function AdminProducts() {
                   >
                     {product.stock}
                   </span>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-2">
+                    {product.is_best_seller ? (
+                      <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">Best Seller</span>
+                    ) : null}
+                    {product.is_new_arrival ? (
+                      <span className="rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-800">New Arrival</span>
+                    ) : null}
+                    {product.is_on_sale ? (
+                      <span className="rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-800">On Sale</span>
+                    ) : null}
+                    {product.is_fan_favorite ? (
+                      <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-semibold text-purple-800">Fan Favorite</span>
+                    ) : null}
+                    {!product.is_best_seller &&
+                    !product.is_new_arrival &&
+                    !product.is_on_sale &&
+                    !product.is_fan_favorite ? (
+                      <span className="text-xs text-gray-500">No labels</span>
+                    ) : null}
+                  </div>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">

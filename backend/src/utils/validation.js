@@ -14,6 +14,17 @@ const loginSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
+const toBoolean = z.preprocess((value) => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value === 1;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'true' || normalized === '1') return true;
+    if (normalized === 'false' || normalized === '0') return false;
+  }
+  return value;
+}, z.boolean());
+
 // Product validation schemas
 const productSchema = z.object({
   name: z.string().min(2, 'Product name is required'),
@@ -28,6 +39,10 @@ const productSchema = z.object({
       'Invalid fragrance type'
     ),
   stock: z.coerce.number().int().nonnegative('Stock must be non-negative'),
+  isBestSeller: toBoolean.default(false),
+  isNewArrival: toBoolean.default(false),
+  isOnSale: toBoolean.default(false),
+  isFanFavorite: toBoolean.default(false),
 });
 
 // Order validation schemas

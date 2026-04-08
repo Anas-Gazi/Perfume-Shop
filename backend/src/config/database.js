@@ -123,11 +123,32 @@ const initializeDatabase = async () => {
         description TEXT,
         category VARCHAR(100),
         fragrance_type VARCHAR(100),
+        is_best_seller BOOLEAN DEFAULT FALSE,
+        is_new_arrival BOOLEAN DEFAULT FALSE,
+        is_on_sale BOOLEAN DEFAULT FALSE,
+        is_fan_favorite BOOLEAN DEFAULT FALSE,
         stock INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    const productAlterStatements = [
+      'ALTER TABLE products ADD COLUMN is_best_seller BOOLEAN DEFAULT FALSE AFTER fragrance_type',
+      'ALTER TABLE products ADD COLUMN is_new_arrival BOOLEAN DEFAULT FALSE AFTER is_best_seller',
+      'ALTER TABLE products ADD COLUMN is_on_sale BOOLEAN DEFAULT FALSE AFTER is_new_arrival',
+      'ALTER TABLE products ADD COLUMN is_fan_favorite BOOLEAN DEFAULT FALSE AFTER is_on_sale',
+    ];
+
+    for (const alterQuery of productAlterStatements) {
+      try {
+        await connection.query(alterQuery);
+      } catch (error) {
+        if (error.code !== 'ER_DUP_FIELDNAME') {
+          throw error;
+        }
+      }
+    }
 
     // Product images table
     await connection.query(`
@@ -172,6 +193,10 @@ const initializeDatabase = async () => {
     const indexes = [
       'CREATE INDEX idx_products_category ON products(category)',
       'CREATE INDEX idx_products_fragrance ON products(fragrance_type)',
+      'CREATE INDEX idx_products_best_seller ON products(is_best_seller)',
+      'CREATE INDEX idx_products_new_arrival ON products(is_new_arrival)',
+      'CREATE INDEX idx_products_on_sale ON products(is_on_sale)',
+      'CREATE INDEX idx_products_fan_favorite ON products(is_fan_favorite)',
       'CREATE INDEX idx_users_email ON users(email)',
       'CREATE INDEX idx_orders_user_id ON orders(user_id)',
       'CREATE INDEX idx_order_items_order_id ON order_items(order_id)',

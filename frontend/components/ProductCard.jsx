@@ -17,9 +17,9 @@ export default function ProductCard({ product }) {
 
   return (
     <Link href={`/products/${product.id}`}>
-      <div className="card group cursor-pointer">
+      <div className="card product-card-luxury group cursor-pointer">
         {/* Image */}
-        <div className="relative mb-4 h-64 w-full overflow-hidden rounded-lg bg-gray-100">
+        <div className="relative h-44 w-full overflow-hidden rounded-t-xl bg-[#f4efe6] sm:h-64">
           {product.images && product.images.length > 0 ? (
             <Image
               src={product.images[0]}
@@ -39,8 +39,8 @@ export default function ProductCard({ product }) {
             <span
               className={`rounded-full px-3 py-1 text-xs font-bold ${
                 product.stock > 0
-                  ? 'bg-green-500 text-white'
-                  : 'bg-red-500 text-white'
+                  ? 'border border-[#c9a84c]/35 bg-[#1e1a15]/75 text-[#f3dca0]'
+                  : 'border border-white/20 bg-black/65 text-white/90'
               }`}
             >
               {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
@@ -49,29 +49,31 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* Details */}
-        <h3 className="mb-2 font-bold text-luxury-dark line-clamp-2">{product.name}</h3>
+        <div className="product-card-luxury__content">
+          <h3 className="mb-1 text-sm font-bold text-luxury-dark line-clamp-2 sm:mb-2 sm:text-base">{product.name}</h3>
 
-        {product.category && (
-          <p className="mb-2 text-sm text-gray-600 capitalize">{product.category}</p>
-        )}
-
-        {product.fragrance_type && (
-          <p className="mb-3 text-xs text-gray-500 capitalize">
-            {product.fragrance_type} • {product.stock} in stock
-          </p>
-        )}
-
-        <div className="flex items-center justify-between">
-          <p className="text-2xl font-bold text-luxury-gold">${product.price}</p>
-
-          {product.stock > 0 && (
-            <button
-              onClick={handleAddToCart}
-              className="rounded bg-luxury-dark px-3 py-2 text-sm text-white hover:bg-luxury-gold hover:text-luxury-dark"
-            >
-              Add to Cart
-            </button>
+          {product.category && (
+            <p className="mb-1 text-xs text-gray-600 capitalize sm:mb-2 sm:text-sm">{product.category}</p>
           )}
+
+          {product.fragrance_type && (
+            <p className="mb-2 text-[11px] text-gray-500 capitalize sm:mb-3 sm:text-xs">
+              {product.fragrance_type} • {product.stock} in stock
+            </p>
+          )}
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-lg font-bold text-luxury-gold sm:text-2xl">${product.price}</p>
+
+            {product.stock > 0 && (
+              <button
+                onClick={handleAddToCart}
+                className="inline-flex min-h-10 w-full items-center justify-center rounded-md border border-[#c9a84c]/30 bg-[#1f1a14] px-3 py-2 text-[11px] font-semibold tracking-wide text-[#f8f0dc] transition hover:bg-[#c9a84c] hover:text-[#1f1a14] sm:min-h-0 sm:w-auto sm:text-sm"
+              >
+                Add to Cart
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </Link>

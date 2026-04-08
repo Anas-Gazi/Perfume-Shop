@@ -1,7 +1,14 @@
 // Product routes
 const express = require('express');
 const router = express.Router();
-const { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct } = require(
+const {
+  getAllProducts,
+  getHomeSections,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} = require(
   '../controllers/productController'
 );
 const { authenticateToken, authorizeAdmin } = require('../middleware/auth');
@@ -9,6 +16,7 @@ const upload = require('../middleware/upload');
 
 // Public routes
 router.get('/', getAllProducts);
+router.get('/home-sections', getHomeSections);
 router.get('/:id', getProductById);
 
 // Admin routes

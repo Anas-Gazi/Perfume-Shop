@@ -4,65 +4,127 @@ const { validate, productSchema } = require('../utils/validation');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../utils/cloudinary');
 const fs = require('fs');
 
+const withImages = async (products = []) => {
+  return Promise.all(
+    products.map(async (product) => {
+      const imagesResult = await query('SELECT image_url FROM product_images WHERE product_id = $1', [
+        product.id,
+      ]);
+      return {
+        ...product,
+        images: imagesResult.rows.map((img) => img.image_url),
+      };
+    })
+  );
+};
+
+const applyAudienceFilter = ({ audience, params, paramCountRef }) => {
+  if (!audience) {
+    return '';
+  }
+
+  const normalized = String(audience).trim().toLowerCase();
+  if (!['men', 'women'].includes(normalized)) {
+    return '';
+  }
+
+  paramCountRef.count++;
+  params.push(normalized === 'men' ? 'Men' : 'Women');
+  return ` AND (category = $${paramCountRef.count} OR category = 'Unisex')`;
+};
+
 // Get all products with optional filters
 const getAllProducts = async (req, res, next) => {
   try {
-    const { category, fragranceType, minPrice, maxPrice, search } = req.query;
+    const { category, fragranceType, minPrice, maxPrice, search, audience } = req.query;
     let sql = 'SELECT * FROM products WHERE 1=1';
     const params = [];
-    let paramCount = 0;
+    const paramCountRef = { count: 0 };
 
     if (category) {
-      paramCount++;
-      sql += ` AND category = $${paramCount}`;
+      paramCountRef.count++;
+      sql += ` AND category = $${paramCountRef.count}`;
       params.push(category);
     }
 
     if (fragranceType) {
-      paramCount++;
-      sql += ` AND fragrance_type = $${paramCount}`;
+      paramCountRef.count++;
+      sql += ` AND fragrance_type = $${paramCountRef.count}`;
       params.push(fragranceType);
     }
 
     if (minPrice) {
-      paramCount++;
-      sql += ` AND price >= $${paramCount}`;
+      paramCountRef.count++;
+      sql += ` AND price >= $${paramCountRef.count}`;
       params.push(parseFloat(minPrice));
     }
 
     if (maxPrice) {
-      paramCount++;
-      sql += ` AND price <= $${paramCount}`;
+      paramCountRef.count++;
+      sql += ` AND price <= $${paramCountRef.count}`;
       params.push(parseFloat(maxPrice));
     }
 
     if (search) {
-      paramCount++;
-      sql += ` AND (name ILIKE $${paramCount} OR description ILIKE $${paramCount})`;
+      paramCountRef.count++;
+      sql += ` AND (name ILIKE $${paramCountRef.count} OR description ILIKE $${paramCountRef.count})`;
       params.push(`%${search}%`);
       params.push(`%${search}%`);
     }
+
+    sql += applyAudienceFilter({ audience, params, paramCountRef });
 
     sql += ' ORDER BY created_at DESC';
 
     const result = await query(sql, params);
 
-    // Fetch images for each product
-    const productsWithImages = await Promise.all(
-      result.rows.map(async (product) => {
-        const imagesResult = await query('SELECT image_url FROM product_images WHERE product_id = $1', [
-          product.id,
-        ]);
-        return {
-          ...product,
-          images: imagesResult.rows.map((img) => img.image_url),
-        };
-      })
-    );
+    const productsWithImages = await withImages(result.rows);
 
     res.json({
       success: true,
       data: productsWithImages,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getHomeSections = async (req, res, next) => {
+  try {
+    const { audience } = req.query;
+    const params = [];
+    const paramCountRef = { count: 0 };
+    const audienceClause = applyAudienceFilter({ audience, params, paramCountRef });
+
+    const sectionQueries = {
+      bestSellers: `SELECT * FROM products WHERE is_best_seller = TRUE${audienceClause} ORDER BY updated_at DESC LIMIT 8`,
+      newArrivals: `SELECT * FROM products WHERE is_new_arrival = TRUE${audienceClause} ORDER BY created_at DESC LIMIT 8`,
+      onSale: `SELECT * FROM products WHERE is_on_sale = TRUE${audienceClause} ORDER BY updated_at DESC LIMIT 8`,
+      fanFavorites: `SELECT * FROM products WHERE is_fan_favorite = TRUE${audienceClause} ORDER BY updated_at DESC LIMIT 8`,
+    };
+
+    const [bestSellersResult, newArrivalsResult, onSaleResult, fanFavoritesResult] = await Promise.all([
+      query(sectionQueries.bestSellers, params),
+      query(sectionQueries.newArrivals, params),
+      query(sectionQueries.onSale, params),
+      query(sectionQueries.fanFavorites, params),
+    ]);
+
+    const [bestSellers, newArrivals, onSale, fanFavorites] = await Promise.all([
+      withImages(bestSellersResult.rows),
+      withImages(newArrivalsResult.rows),
+      withImages(onSaleResult.rows),
+      withImages(fanFavoritesResult.rows),
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        bestSellers,
+        newArrivals,
+        onSale,
+        fanFavorites,
+      },
     });
   } catch (error) {
     next(error);
@@ -106,7 +168,7 @@ const createProduct = async (req, res, next) => {
 
     // Insert product
     const result = await query(
-      'INSERT INTO products (name, price, description, category, fragrance_type, stock) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      'INSERT INTO products (name, price, description, category, fragrance_type, stock, is_best_seller, is_new_arrival, is_on_sale, is_fan_favorite) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
       [
         validatedData.name,
         validatedData.price,
@@ -114,6 +176,10 @@ const createProduct = async (req, res, next) => {
         validatedData.category,
         validatedData.fragranceType,
         validatedData.stock,
+        validatedData.isBestSeller,
+        validatedData.isNewArrival,
+        validatedData.isOnSale,
+        validatedData.isFanFavorite,
       ]
     );
 
@@ -172,7 +238,7 @@ const updateProduct = async (req, res, next) => {
 
     // Update product
     const updatedResult = await query(
-      'UPDATE products SET name = $1, price = $2, description = $3, category = $4, fragrance_type = $5, stock = $6, updated_at = CURRENT_TIMESTAMP WHERE id = $7 RETURNING *',
+      'UPDATE products SET name = $1, price = $2, description = $3, category = $4, fragrance_type = $5, stock = $6, is_best_seller = $7, is_new_arrival = $8, is_on_sale = $9, is_fan_favorite = $10, updated_at = CURRENT_TIMESTAMP WHERE id = $11 RETURNING *',
       [
         validatedData.name,
         validatedData.price,
@@ -180,6 +246,10 @@ const updateProduct = async (req, res, next) => {
         validatedData.category,
         validatedData.fragranceType,
         validatedData.stock,
+        validatedData.isBestSeller,
+        validatedData.isNewArrival,
+        validatedData.isOnSale,
+        validatedData.isFanFavorite,
         id,
       ]
     );
@@ -251,6 +321,7 @@ const deleteProduct = async (req, res, next) => {
 
 module.exports = {
   getAllProducts,
+  getHomeSections,
   getProductById,
   createProduct,
   updateProduct,
