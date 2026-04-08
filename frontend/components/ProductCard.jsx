@@ -3,17 +3,45 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/cartStore';
 import { getOptimizedImageUrl } from '@/lib/image';
 import toast from 'react-hot-toast';
 
 export default function ProductCard({ product }) {
+  const router = useRouter();
   const addToCart = useCartStore((state) => state.addToCart);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     addToCart(product, 1);
-    toast.success(`${product.name} added to cart!`);
+
+    toast.custom(
+      (t) => (
+        <div
+          className={`flex w-[min(92vw,420px)] items-start gap-4 rounded-2xl border border-luxury-gold/20 bg-white px-4 py-4 shadow-[0_18px_40px_rgba(30,24,18,0.16)] transition-all ${
+            t.visible ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
+          }`}
+        >
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-luxury-dark">Added to cart</p>
+            <p className="mt-1 text-sm text-gray-600">Proceed to payment when you&apos;re ready.</p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              toast.dismiss(t.id);
+              router.push('/checkout');
+            }}
+            className="inline-flex shrink-0 items-center justify-center rounded-full bg-luxury-dark px-4 py-2 text-xs font-semibold tracking-wide text-white transition hover:bg-luxury-gold hover:text-luxury-dark"
+          >
+            Proceed to Payment
+          </button>
+        </div>
+      ),
+      { duration: 5000 }
+    );
   };
 
   return (
