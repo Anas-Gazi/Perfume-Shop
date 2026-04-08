@@ -42,8 +42,8 @@ export default function UnisexPerfumesPage() {
             </p>
             <div className="audience-hero__actions mt-6 flex flex-wrap gap-3">
               <Link href="/products" className="btn-luxury">All Perfumes</Link>
-              <Link href="/men" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Men's Perfumes</Link>
-              <Link href="/women" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Women's Perfumes</Link>
+              <Link href="/men" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Men&apos;s Perfumes</Link>
+              <Link href="/women" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Women&apos;s Perfumes</Link>
             </div>
           </div>
 

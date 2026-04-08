@@ -36,13 +36,13 @@ export default function MenPerfumesPage() {
         <div className="audience-hero__grid mx-auto max-w-7xl">
           <div className="audience-hero__copy">
             <p className="audience-hero__kicker">Classic Collection</p>
-            <h1 className="hero-heading audience-hero__title">Men's Perfumes</h1>
+            <h1 className="hero-heading audience-hero__title">Men&apos;s Perfumes</h1>
             <p className="audience-hero__desc">
               Discover bold, refined and timeless scents crafted for confidence.
             </p>
             <div className="audience-hero__actions mt-6 flex flex-wrap gap-3">
               <Link href="/products" className="btn-luxury">All Perfumes</Link>
-              <Link href="/women" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Women's Perfumes</Link>
+              <Link href="/women" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Women&apos;s Perfumes</Link>
               <Link href="/unisex" className="btn-luxury-outline border-white/60 text-white hover:bg-white hover:text-luxury-dark">Unisex Perfumes</Link>
             </div>
           </div>
@@ -66,8 +66,8 @@ export default function MenPerfumesPage() {
           </div>
         ) : (
           <div className="rounded-2xl border border-luxury-gold/20 bg-white/80 px-6 py-14 text-center">
-            <p className="text-xl font-semibold text-luxury-dark">No men's perfumes available right now</p>
-            <p className="mt-2 text-gray-600">Add men's products from admin to populate this collection.</p>
+            <p className="text-xl font-semibold text-luxury-dark">No men&apos;s perfumes available right now</p>
+            <p className="mt-2 text-gray-600">Add men&apos;s products from admin to populate this collection.</p>
           </div>
         )}
       </section>
