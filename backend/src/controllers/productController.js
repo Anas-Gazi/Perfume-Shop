@@ -5,17 +5,28 @@ const { uploadToCloudinary, deleteFromCloudinary } = require('../utils/cloudinar
 const fs = require('fs');
 
 const withImages = async (products = []) => {
-  return Promise.all(
-    products.map(async (product) => {
-      const imagesResult = await query('SELECT image_url FROM product_images WHERE product_id = $1', [
-        product.id,
-      ]);
-      return {
-        ...product,
-        images: imagesResult.rows.map((img) => img.image_url),
-      };
-    })
+  if (!products.length) {
+    return [];
+  }
+
+  const productIds = products.map((product) => product.id);
+  const imagesResult = await query(
+    'SELECT product_id, image_url FROM product_images WHERE product_id = ANY($1)',
+    [productIds]
   );
+
+  const imagesByProductId = new Map();
+  for (const row of imagesResult.rows) {
+    const key = String(row.product_id);
+    const existing = imagesByProductId.get(key) || [];
+    existing.push(row.image_url);
+    imagesByProductId.set(key, existing);
+  }
+
+  return products.map((product) => ({
+    ...product,
+    images: imagesByProductId.get(String(product.id)) || [],
+  }));
 };
 
 const applyAudienceFilter = ({ audience, params, paramCountRef }) => {
@@ -36,6 +47,7 @@ const applyAudienceFilter = ({ audience, params, paramCountRef }) => {
 // Get all products with optional filters
 const getAllProducts = async (req, res, next) => {
   try {
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
     const { category, fragranceType, minPrice, maxPrice, search, audience } = req.query;
     let sql = 'SELECT * FROM products WHERE 1=1';
     const params = [];
@@ -91,6 +103,7 @@ const getAllProducts = async (req, res, next) => {
 
 const getHomeSections = async (req, res, next) => {
   try {
+    res.set('Cache-Control', 'public, max-age=120, stale-while-revalidate=600');
     const { audience } = req.query;
     const params = [];
     const paramCountRef = { count: 0 };

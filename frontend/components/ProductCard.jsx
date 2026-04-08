@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCartStore } from '@/lib/cartStore';
+import { getOptimizedImageUrl } from '@/lib/image';
 import toast from 'react-hot-toast';
 
 export default function ProductCard({ product }) {
@@ -22,7 +23,7 @@ export default function ProductCard({ product }) {
         <div className="relative h-44 w-full overflow-hidden rounded-t-xl bg-[#f4efe6] sm:h-64">
           {product.images && product.images.length > 0 ? (
             <Image
-              src={product.images[0]}
+              src={getOptimizedImageUrl(product.images[0], { width: 700, quality: 72 })}
               alt={product.name}
               fill
               className="object-cover transition-transform group-hover:scale-105"

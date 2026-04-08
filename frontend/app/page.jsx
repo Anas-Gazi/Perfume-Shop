@@ -3,8 +3,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import api from '@/lib/api';
 import ProductCard from '@/components/ProductCard';
+import { getOptimizedImageUrl } from '@/lib/image';
 import toast from 'react-hot-toast';
 
 export default function Home() {
@@ -149,11 +151,16 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {categoryCards.map((card) => (
             <Link key={card.title} href={card.href} className="category-card group">
-              <div
-                className="category-card__image"
-                style={{ backgroundImage: `url(${card.image})` }}
-                aria-hidden="true"
-              ></div>
+              <div className="category-card__image" aria-hidden="true">
+                <Image
+                  src={getOptimizedImageUrl(card.image, { width: 900, quality: 72 })}
+                  alt={card.title}
+                  fill
+                  className="category-card__img-element"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                  loading="lazy"
+                />
+              </div>
               <div className="category-card__overlay"></div>
               <div className="category-card__content">
                 <h3 className="category-card__title">{card.title}</h3>
