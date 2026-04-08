@@ -10,9 +10,10 @@ const withImages = async (products = []) => {
   }
 
   const productIds = products.map((product) => product.id);
+  const placeholders = productIds.map((_, index) => `$${index + 1}`).join(', ');
   const imagesResult = await query(
-    'SELECT product_id, image_url FROM product_images WHERE product_id = ANY($1)',
-    [productIds]
+    `SELECT product_id, image_url FROM product_images WHERE product_id IN (${placeholders})`,
+    productIds
   );
 
   const imagesByProductId = new Map();
